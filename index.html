@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Esther Prayer Cell CRM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://code.iconify.design/iconify-icon/1.0.8/iconify-icon.min.js"></script>
+    <style>
+        :root {
+            --primary-50: #EEF4FF;
+            --primary-100: #DBE9FF;
+            --primary-200: #BFCFFF;
+            --primary-400: #9B8EF7;
+            --primary-500: #7C5FEF;
+            --primary-600: #6D3EE8;
+            --primary-700: #5E2DD8;
+            --primary-800: #4F1CC8;
+            --primary-900: #3A0BB8;
+            --pink-light: #FCE7F3;
+            --pink-accent: #F472B6;
+            --green-accent: #A7E6C4;
+            --green-light: #D1F3E0;
+            --yellow-accent: #FFFACD;
+            --yellow-light: #FFF8DC;
+            --red-accent: #F8A4D0;
+            --gray-0: #FFFFFF;
+            --gray-50: #F8FAFC;
+            --gray-100: #F1F5F9;
+            --gray-200: #E2E8F0;
+            --gray-300: #CBD5E1;
+            --gray-400: #94A3B8;
+            --gray-500: #64748B;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1E293B;
+            --gray-900: #0F172A;
+            --bg-page: #F3EBFF;
+            --bg-card: #FFFFFF;
+            --bg-dark-card: #6D3EE8;
+            --shadow-xs: 0 1px 3px rgba(109, 62, 232, 0.06), 0 1px 2px rgba(109, 62, 232, 0.04);
+            --shadow-sm: 0 2px 8px rgba(109, 62, 232, 0.08), 0 1px 3px rgba(109, 62, 232, 0.05);
+            --shadow-md: 0 4px 16px rgba(109, 62, 232, 0.12), 0 2px 6px rgba(109, 62, 232, 0.07);
+            --shadow-lg: 0 8px 32px rgba(109, 62, 232, 0.14), 0 4px 12px rgba(109, 62, 232, 0.08);
+            --shadow-blue-glow: 0 8px 30px rgba(109, 62, 232, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            --shadow-pill: 0 4px 12px rgba(109, 62, 232, 0.30);
+        }
+
+        * { font-family: 'DM Sans', sans-serif; }
+        h1, h2, h3, h4, h5, h6 { font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        body { background-color: var(--bg-page); }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 18px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(226, 232, 240, 0.6);
+            transition: box-shadow 0.2s ease, transform 0.2s ease;
+        }
+        .card.interactive:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+
+        .card-dark {
+            background: linear-gradient(135deg, #6D3EE8 0%, #7C5FEF 60%, #8B7FED 100%);
+            border-radius: 24px;
+            box-shadow: var(--shadow-blue-glow);
+            color: #FFFFFF;
+            position: relative;
+            overflow: hidden;
+        }
+        .card-dark::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+        }
+        .card-dark::after {
+            content: '';
+            position: absolute;
+            top: -40px; right: -40px;
+            width: 180px; height: 180px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.05);
+            pointer-events: none;
+        }
+
+        .sidebar {
+            width: 80px;
+            background: var(--bg-card);
+            border-radius: 0 24px 24px 0;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 24px 0;
+            gap: 8px;
+            transition: width 0.3s ease;
+            position: relative;
+        }
+
+        .sidebar.expanded {
+            width: 240px;
+            align-items: flex-start;
+            padding: 24px 16px;
+        }
+
+        .sidebar-logo {
+            width: 48px;
+            height: 48px;
+            background: var(--primary-600);
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            margin-bottom: 32px;
+            color: white;
+        }
+
+        .nav-item {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-400);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            gap: 12px;
+        }
+
+        .sidebar.expanded .nav-item {
+            width: 100%;
+            justify-content: flex-start;
+            padding: 0 12px;
+            background: transparent;
+        }
+
+        .nav-item.active {
+            background: var(--primary-100);
+            color: var(--primary-600);
+        }
+
+        .sidebar.expanded .nav-item.active {
+            background: var(--primary-50);
+            border-left: 4px solid var(--primary-600);
+            padding-left: 8px;
+        }
+
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: -12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 24px;
+            background: var(--primary-600);
+            border-radius: 0 4px 4px 0;
+            display: none;
+        }
+
+        .sidebar.expanded .nav-item.active::before {
+            display: none;
+        }
+
+        .nav-label {
+            display: none;
+            font-size: 14px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .sidebar.expanded .nav-label {
+            display: inline;
+        }
+
+        .nav-item:hover:not(.active) {
+            background: var(--gray-100);
+            color: var(--gray-700);
+        }
+
+        .icon-box {
+            width: 44px;
+            height: 44px;
+            background: var(--primary-600);
+            border-radius: 10px;
+            display: grid;
+            place-items: center;
+            color: #FFFFFF;
+            flex-shrink: 0;
+        }
+
+        .icon-box-light {
+            width: 44px;
+            height: 44px;
+            background: var(--primary-100);
+            border-radius: 10px;
+            display: grid;
+            place-items: center;
+            color: var(--primary-600);
+            flex-shrink: 0;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            font-size: 11.2px;
+            font-weight: 600;
+            line-height: 1;
+        }
+
+        .badge-blue { background: var(--primary-100); color: var(--primary-700); }
+        .badge-green { background: var(--green-light); color: #22863A; }
+        .badge-amber { background: var(--yellow-light); color: #B45309; }
+
+        .btn-primary {
+            background: var(--primary-600);
+            color: #FFFFFF;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(168, 85, 247, 0.30);
+            transition: all 0.18s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-primary:hover {
+            background: var(--primary-700);
+            box-shadow: 0 4px 14px rgba(168, 85, 247, 0.40);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--primary-100);
+            color: var(--primary-700);
+            border: 1px solid var(--primary-200);
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.18s ease;
+        }
+        .btn-secondary:hover {
+            background: var(--primary-200);
+            border-color: var(--primary-300);
+        }
+
+        .kpi-card {
+            background: var(--bg-card);
+            border-radius: 18px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--gray-100);
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .kpi-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .kpi-value {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--gray-800);
+            line-height: 1;
+        }
+
+        .kpi-label {
+            font-size: 13px;
+            color: var(--gray-500);
+            margin-top: 4px;
+        }
+
+        .list-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 14px;
+            transition: background 0.15s ease;
+            cursor: pointer;
+        }
+        .list-item:hover { background: var(--gray-50); }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 9999px;
+            background: var(--blue-100);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--blue-600);
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section { animation: fadeUp 0.4s ease both; }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(109, 62, 232, 0.25);
+            border-radius: 3px;
+            transition: background 0.2s ease;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(109, 62, 232, 0.45);
+        }
+    </style>
+</head>
+<body>
+    <div class="flex h-screen bg-blue-50">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar" id="sidebar">
+            <button onclick="showSection('dashboard')" class="sidebar-logo" style="border: none; cursor: pointer;">
+                <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 18px; font-weight: 700; color: white;">EPC</span>
+            </button>
+            <nav style="display: flex; flex-direction: column; gap: 8px; flex: 1;">
+                <button onclick="showSection('dashboard')" class="nav-item active" title="Dashboard">
+                    <iconify-icon icon="mdi:chart-box" style="font-size: 22px;"></iconify-icon>
+                    <span class="nav-label">Dashboard</span>
+                </button>
+                <button onclick="showSection('people')" class="nav-item" title="Members">
+                    <iconify-icon icon="mdi:account-multiple" style="font-size: 22px;"></iconify-icon>
+                    <span class="nav-label">Members</span>
+                </button>
+                <button onclick="showSection('events')" class="nav-item" title="Events">
+                    <iconify-icon icon="mdi:calendar-outline" style="font-size: 22px;"></iconify-icon>
+                    <span class="nav-label">Events</span>
+                </button>
+            </nav>
+            <button onclick="toggleSidebar()" style="background: none; border: none; cursor: pointer; color: var(--primary-600); font-size: 18px; margin-top: auto; padding: 8px; display: flex; align-items: center; justify-content: center;" id="toggleBtn" title="Toggle menu">
+                <iconify-icon icon="mdi:chevron-right" style="font-size: 22px;"></iconify-icon>
+            </button>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 overflow-hidden">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="section h-full flex flex-col">
+                <div class="p-5 md:p-6 space-y-4 flex-1 flex flex-col overflow-hidden">
+                    <!-- Greeting -->
+                    <div class="card-dark p-10 rounded-2xl flex-shrink-0" style="position: relative; overflow: hidden;">
+                        <div>
+                            <h1 style="font-size: 27px; font-weight: 700; margin-bottom: 4px;">Praise the LORD!</h1>
+                            <p style="font-size: 24px; font-weight: 400; opacity: 0.9; margin: 0;">Welcome to Esther Prayer Cell</p>
+                        </div>
+                        <img src="women.PNG" alt="Women Prayer Cell" style="top: 3px; position: absolute; right: 46px; height: 367px; width: auto;">
+                    </div>
+
+                    <!-- KPI Stats -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 flex-shrink-0">
+                        <div class="kpi-card">
+                            <div class="icon-box">
+                                <iconify-icon icon="mdi:account-group" style="font-size: 20px;"></iconify-icon>
+                            </div>
+                            <div>
+                                <div class="kpi-value">324</div>
+                                <div class="kpi-label">Total Members</div>
+                            </div>
+                        </div>
+
+                        <div class="kpi-card">
+                            <div class="icon-box">
+                                <iconify-icon icon="mdi:calendar-multiple" style="font-size: 20px;"></iconify-icon>
+                            </div>
+                            <div>
+                                <div class="kpi-value">8</div>
+                                <div class="kpi-label">Upcoming Events</div>
+                            </div>
+                        </div>
+
+                        <div class="kpi-card">
+                            <div class="icon-box">
+                                <iconify-icon icon="mdi:check-circle" style="font-size: 20px;"></iconify-icon>
+                            </div>
+                            <div>
+                                <div class="kpi-value">87%</div>
+                                <div class="kpi-label">Last Attendance</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Content Grid -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 flex-1 min-h-0">
+                        <!-- Today Events -->
+                        <div class="card p-5 lg:col-span-2 overflow-hidden flex flex-col">
+                            <h3 style="font-size: 16px; font-weight: 700; color: var(--gray-800); margin-bottom: 14px;">Today Events</h3>
+                            <div class="space-y-3 flex-1 overflow-y-auto">
+                                <!-- Event 1 -->
+                                <div style="background: #FAF5FF; border-radius: 12px; padding: 16px; display: grid; grid-template-columns: 1fr 100px 150px 150px; gap: 16px; align-items: center;">
+                                    <div>
+                                        <p style="font-size: 11px; color: var(--gray-500); font-weight: 600; margin: 0 0 6px 0; text-transform: uppercase;">Event</p>
+                                        <p style="font-size: 14px; font-weight: 600; color: var(--gray-800); margin: 0;">Sunday Service</p>
+                                    </div>
+                                    <div>
+                                        <p style="font-size: 11px; color: var(--gray-500); font-weight: 600; margin: 0 0 6px 0; text-transform: uppercase;">Time</p>
+                                        <p style="font-size: 14px; font-weight: 600; color: var(--gray-800); margin: 0;">10:00 AM</p>
+                                    </div>
+                                    <div>
+                                        <p style="font-size: 11px; color: var(--gray-500); font-weight: 600; margin: 0 0 6px 0; text-transform: uppercase;">Organiser</p>
+                                        <p style="font-size: 14px; font-weight: 600; color: var(--gray-800); margin: 0;">Priyanka</p>
+                                    </div>
+                                    <div>
+                                        <p style="font-size: 11px; color: var(--gray-500); font-weight: 600; margin: 0 0 6px 0; text-transform: uppercase;">Host</p>
+                                        <p style="font-size: 14px; font-weight: 600; color: var(--gray-800); margin: 0;">Padma</p>
+                                    </div>
+                                </div>
+
+                                <!-- Event 2 -->
+                                <div style="background: #D1F3E0; border-radius: 12px; padding: 16px; display: grid; grid-template-columns: 1fr 100px 150px 150px; gap: 16px; align-items: center;">
+                                    <div>
+                                        <p style="font-size: 11px; color: var(--gray-500); font-weight: 600; margin: 0 0 6px 0; text-transform: uppercase;">Event</p>
+                                        <p style="font-size: 14px; font-weight: 600; color: var(--gray-800); margin: 0;">Bible Study</p>
+                                    </div>
+                                    <div>
+                                        <p style="font-size: 11px; color: var(--gray-500); font-weight: 600; margin: 0 0 6px 0; text-transform: uppercase;">Time</p>
+                                        <p style="font-size: 14px; font-weight: 600; color: var(--gray-800); margin: 0;">2:00 PM</p>
+                                    </div>
+                                    <div>
+                                        <p style="font-size: 11px; color: var(--gray-500); font-weight: 600; margin: 0 0 6px 0; text-transform: uppercase;">Organiser</p>
+                                        <p style="font-size: 14px; font-weight: 600; color: var(--gray-800); margin: 0;">John Doe</p>
+                                    </div>
+                                    <div>
+                                        <p style="font-size: 11px; color: var(--gray-500); font-weight: 600; margin: 0 0 6px 0; text-transform: uppercase;">Host</p>
+                                        <p style="font-size: 14px; font-weight: 600; color: var(--gray-800); margin: 0;">Michael Johnson</p>
+                                    </div>
+                                </div>
+
+                                <!-- Event 3 -->
+                                <div style="background: #FFF8DC; border-radius: 12px; padding: 16px; display: grid; grid-template-columns: 1fr 100px 150px 150px; gap: 16px; align-items: center;">
+                                    <div>
+                                        <p style="font-size: 11px; color: var(--gray-500); font-weight: 600; margin: 0 0 6px 0; text-transform: uppercase;">Event</p>
+                                        <p style="font-size: 14px; font-weight: 600; color: var(--gray-800); margin: 0;">Prayer Meeting</p>
+                                    </div>
+                                    <div>
+                                        <p style="font-size: 11px; color: var(--gray-500); font-weight: 600; margin: 0 0 6px 0; text-transform: uppercase;">Time</p>
+                                        <p style="font-size: 14px; font-weight: 600; color: var(--gray-800); margin: 0;">6:30 PM</p>
+                                    </div>
+                                    <div>
+                                        <p style="font-size: 11px; color: var(--gray-500); font-weight: 600; margin: 0 0 6px 0; text-transform: uppercase;">Organiser</p>
+                                        <p style="font-size: 14px; font-weight: 600; color: var(--gray-800); margin: 0;">Sarah Anderson</p>
+                                    </div>
+                                    <div>
+                                        <p style="font-size: 11px; color: var(--gray-500); font-weight: 600; margin: 0 0 6px 0; text-transform: uppercase;">Host</p>
+                                        <p style="font-size: 14px; font-weight: 600; color: var(--gray-800); margin: 0;">Emma Wilson</p>
+                                    </div>
+                                </div>
+
+                                <!-- Event 4 -->
+                                <div style="background: #FCE7F3; border-radius: 12px; padding: 16px; display: grid; grid-template-columns: 1fr 100px 150px 150px; gap: 16px; align-items: center;">
+                                    <div>
+                                        <p style="font-size: 11px; color: var(--gray-500); font-weight: 600; margin: 0 0 6px 0; text-transform: uppercase;">Event</p>
+                                        <p style="font-size: 14px; font-weight: 600; color: var(--gray-800); margin: 0;">Choir Practice</p>
+                                    </div>
+                                    <div>
+                                        <p style="font-size: 11px; color: var(--gray-500); font-weight: 600; margin: 0 0 6px 0; text-transform: uppercase;">Time</p>
+                                        <p style="font-size: 14px; font-weight: 600; color: var(--gray-800); margin: 0;">5:00 PM</p>
+                                    </div>
+                                    <div>
+                                        <p style="font-size: 11px; color: var(--gray-500); font-weight: 600; margin: 0 0 6px 0; text-transform: uppercase;">Organiser</p>
+                                        <p style="font-size: 14px; font-weight: 600; color: var(--gray-800); margin: 0;">Rachel Smith</p>
+                                    </div>
+                                    <div>
+                                        <p style="font-size: 11px; color: var(--gray-500); font-weight: 600; margin: 0 0 6px 0; text-transform: uppercase;">Host</p>
+                                        <p style="font-size: 14px; font-weight: 600; color: var(--gray-800); margin: 0;">Grace Lee</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Daily Bread - Bible in One Year -->
+                        <div class="card p-5 overflow-hidden flex flex-col">
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-shrink: 0;">
+                                <h3 style="font-size: 16px; font-weight: 700; color: var(--gray-800); margin: 0;">Daily Bread</h3>
+                                <p style="font-size: 13px; color: var(--gray-500); margin: 0;">May 1, 2026</p>
+                            </div>
+                            <div class="space-y-2" style="overflow: hidden;">
+                                <div>
+                                    <p style="font-size: 13px; font-weight: 700; color: var(--primary-700); margin-bottom: 10px;">Old Testament</p>
+                                    <div style="background: var(--primary-50); padding: 14px; border-radius: 10px;">
+                                        <p style="font-size: 13px; font-weight: 600; color: var(--gray-800); margin: 0 0 4px 0;">Genesis 1-2</p>
+                                        <p style="font-size: 13px; font-weight: 600; color: var(--gray-800); margin: 0 0 4px 0;">Exodus 3-5</p>
+                                        <p style="font-size: 13px; font-weight: 600; color: var(--gray-800); margin: 0;">Psalms 1-3</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p style="font-size: 13px; font-weight: 700; color: var(--primary-700); margin-bottom: 10px;">New Testament</p>
+                                    <div style="background: var(--green-light); padding: 14px; border-radius: 10px;">
+                                        <p style="font-size: 13px; font-weight: 600; color: var(--gray-800); margin: 0 0 4px 0;">Matthew 1-2</p>
+                                        <p style="font-size: 13px; font-weight: 600; color: var(--gray-800); margin: 0 0 4px 0;">Mark 5-7</p>
+                                        <p style="font-size: 13px; font-weight: 600; color: var(--gray-800); margin: 0;">Romans 8-10</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Members Section -->
+            <section id="people" class="section hidden">
+                <div class="p-6 md:p-8 space-y-6">
+                    <div>
+                        <h2 style="font-size: 30px; font-weight: 700; color: var(--gray-800);">Members</h2>
+                        <p style="font-size: 15px; color: var(--gray-500); margin-top: 8px;">Manage prayer cell members</p>
+                    </div>
+
+                    <div class="card overflow-hidden">
+                        <div class="p-6 border-b border-gray-100 flex gap-4">
+                            <input type="text" placeholder="Search members..." style="flex: 1; padding: 10px 16px; border: 1px solid var(--gray-200); border-radius: 10px; font-size: 15px;">
+                            <button onclick="showAddPersonModal()" class="btn-primary">
+                                <iconify-icon icon="mdi:plus" style="font-size: 16px;"></iconify-icon> Add Member
+                            </button>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table style="width: 100%; font-size: 13px;">
+                                <thead style="background: var(--gray-50); border-bottom: 1px solid var(--gray-200);">
+                                    <tr>
+                                        <th style="padding: 16px 24px; text-align: left; color: var(--gray-600); font-weight: 600;">Name</th>
+                                        <th style="padding: 16px 24px; text-align: left; color: var(--gray-600); font-weight: 600;">Email</th>
+                                        <th style="padding: 16px 24px; text-align: left; color: var(--gray-600); font-weight: 600;">Phone</th>
+                                        <th style="padding: 16px 24px; text-align: left; color: var(--gray-600); font-weight: 600;">Role</th>
+                                        <th style="padding: 16px 24px; text-align: right; color: var(--gray-600); font-weight: 600;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr style="border-bottom: 1px solid var(--gray-100);">
+                                        <td style="padding: 16px 24px; color: var(--gray-800); font-weight: 500;">John Doe</td>
+                                        <td style="padding: 16px 24px; color: var(--gray-600);">john@example.com</td>
+                                        <td style="padding: 16px 24px; color: var(--gray-600);">+1 (555) 123-4567</td>
+                                        <td style="padding: 16px 24px;"><span class="badge badge-blue">Member</span></td>
+                                        <td style="padding: 16px 24px; text-align: right;"><button style="color: var(--primary-600); cursor: pointer;"><iconify-icon icon="mdi:pencil" style="font-size: 16px;"></iconify-icon></button></td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid var(--gray-100);">
+                                        <td style="padding: 16px 24px; color: var(--gray-800); font-weight: 500;">Sarah Anderson</td>
+                                        <td style="padding: 16px 24px; color: var(--gray-600);">sarah@example.com</td>
+                                        <td style="padding: 16px 24px; color: var(--gray-600);">+1 (555) 234-5678</td>
+                                        <td style="padding: 16px 24px;"><span class="badge badge-green">Leader</span></td>
+                                        <td style="padding: 16px 24px; text-align: right;"><button style="color: var(--primary-600); cursor: pointer;"><iconify-icon icon="mdi:pencil" style="font-size: 16px;"></iconify-icon></button></td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid var(--gray-100);">
+                                        <td style="padding: 16px 24px; color: var(--gray-800); font-weight: 500;">Michael Johnson</td>
+                                        <td style="padding: 16px 24px; color: var(--gray-600);">michael@example.com</td>
+                                        <td style="padding: 16px 24px; color: var(--gray-600);">+1 (555) 345-6789</td>
+                                        <td style="padding: 16px 24px;"><span class="badge badge-amber">Volunteer</span></td>
+                                        <td style="padding: 16px 24px; text-align: right;"><button style="color: var(--primary-600); cursor: pointer;"><iconify-icon icon="mdi:pencil" style="font-size: 16px;"></iconify-icon></button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Events Section -->
+            <section id="events" class="section hidden">
+                <div class="p-6 md:p-8 space-y-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 style="font-size: 30px; font-weight: 700; color: var(--gray-800);">Events</h2>
+                            <p style="font-size: 15px; color: var(--gray-500); margin-top: 8px;">Manage prayer cell events</p>
+                        </div>
+                        <button onclick="showAddEventModal()" class="btn-primary">
+                            <iconify-icon icon="mdi:plus" style="font-size: 16px;"></iconify-icon> Create Event
+                        </button>
+                    </div>
+
+                    <div id="eventsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="card-dark p-6 rounded-2xl" style="display: grid; grid-template-columns: 1fr; gap: 16px;">
+                            <div>
+                                <p style="font-size: 12px; opacity: 0.8; font-weight: 600; margin: 0 0 8px 0; text-transform: uppercase;">Event Name</p>
+                                <h3 style="font-size: 18px; font-weight: 700; margin: 0;">Sunday Service</h3>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 120px 150px 150px; gap: 16px;">
+                                <div>
+                                    <p style="font-size: 12px; opacity: 0.8; font-weight: 600; margin: 0 0 8px 0; text-transform: uppercase;">Time</p>
+                                    <p style="font-size: 15px; font-weight: 600; margin: 0;">10:00 AM</p>
+                                </div>
+                                <div>
+                                    <p style="font-size: 12px; opacity: 0.8; font-weight: 600; margin: 0 0 8px 0; text-transform: uppercase;">Organiser</p>
+                                    <p style="font-size: 15px; font-weight: 600; margin: 0;">Priyanka</p>
+                                </div>
+                                <div>
+                                    <p style="font-size: 12px; opacity: 0.8; font-weight: 600; margin: 0 0 8px 0; text-transform: uppercase;">Host</p>
+                                    <p style="font-size: 15px; font-weight: 600; margin: 0;">Padma</p>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="btn-secondary" style="flex: 1; background: rgba(255,255,255,0.15); border: none; color: white;"><iconify-icon icon="mdi:trash-can-outline" style="font-size: 14px;"></iconify-icon></button>
+                            </div>
+                        </div>
+
+                        <div class="card-dark p-6 rounded-2xl" style="background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 60%, #6B21A8 100%); display: grid; grid-template-columns: 1fr; gap: 16px;">
+                            <div>
+                                <p style="font-size: 12px; opacity: 0.8; font-weight: 600; margin: 0 0 8px 0; text-transform: uppercase;">Event Name</p>
+                                <h3 style="font-size: 18px; font-weight: 700; margin: 0;">Bible Study</h3>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 120px 150px 150px; gap: 16px;">
+                                <div>
+                                    <p style="font-size: 12px; opacity: 0.8; font-weight: 600; margin: 0 0 8px 0; text-transform: uppercase;">Time</p>
+                                    <p style="font-size: 15px; font-weight: 600; margin: 0;">7:00 PM</p>
+                                </div>
+                                <div>
+                                    <p style="font-size: 12px; opacity: 0.8; font-weight: 600; margin: 0 0 8px 0; text-transform: uppercase;">Organiser</p>
+                                    <p style="font-size: 15px; font-weight: 600; margin: 0;">John Doe</p>
+                                </div>
+                                <div>
+                                    <p style="font-size: 12px; opacity: 0.8; font-weight: 600; margin: 0 0 8px 0; text-transform: uppercase;">Host</p>
+                                    <p style="font-size: 15px; font-weight: 600; margin: 0;">Michael Johnson</p>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="btn-secondary" style="flex: 1; background: rgba(255,255,255,0.15); border: none; color: white;"><iconify-icon icon="mdi:trash-can-outline" style="font-size: 14px;"></iconify-icon></button>
+                            </div>
+                        </div>
+
+                        <div class="card-dark p-6 rounded-2xl" style="background: linear-gradient(135deg, #EC4899 0%, #DB2777 60%, #BE185D 100%); display: grid; grid-template-columns: 1fr; gap: 16px;">
+                            <div>
+                                <p style="font-size: 12px; opacity: 0.8; font-weight: 600; margin: 0 0 8px 0; text-transform: uppercase;">Event Name</p>
+                                <h3 style="font-size: 18px; font-weight: 700; margin: 0;">Prayer Meeting</h3>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 120px 150px 150px; gap: 16px;">
+                                <div>
+                                    <p style="font-size: 12px; opacity: 0.8; font-weight: 600; margin: 0 0 8px 0; text-transform: uppercase;">Time</p>
+                                    <p style="font-size: 15px; font-weight: 600; margin: 0;">6:30 PM</p>
+                                </div>
+                                <div>
+                                    <p style="font-size: 12px; opacity: 0.8; font-weight: 600; margin: 0 0 8px 0; text-transform: uppercase;">Organiser</p>
+                                    <p style="font-size: 15px; font-weight: 600; margin: 0;">Sarah Anderson</p>
+                                </div>
+                                <div>
+                                    <p style="font-size: 12px; opacity: 0.8; font-weight: 600; margin: 0 0 8px 0; text-transform: uppercase;">Host</p>
+                                    <p style="font-size: 15px; font-weight: 600; margin: 0;">Emma Wilson</p>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="btn-secondary" style="flex: 1; background: rgba(255,255,255,0.15); border: none; color: white;"><iconify-icon icon="mdi:trash-can-outline" style="font-size: 14px;"></iconify-icon></button>
+                            </div>
+                        </div>
+
+                        <div class="card-dark p-6 rounded-2xl" style="background: linear-gradient(135deg, #10B981 0%, #059669 60%, #047857 100%); display: grid; grid-template-columns: 1fr; gap: 16px;">
+                            <div>
+                                <p style="font-size: 12px; opacity: 0.8; font-weight: 600; margin: 0 0 8px 0; text-transform: uppercase;">Event Name</p>
+                                <h3 style="font-size: 18px; font-weight: 700; margin: 0;">Community Outreach</h3>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 120px 150px 150px; gap: 16px;">
+                                <div>
+                                    <p style="font-size: 12px; opacity: 0.8; font-weight: 600; margin: 0 0 8px 0; text-transform: uppercase;">Time</p>
+                                    <p style="font-size: 15px; font-weight: 600; margin: 0;">2:00 PM</p>
+                                </div>
+                                <div>
+                                    <p style="font-size: 12px; opacity: 0.8; font-weight: 600; margin: 0 0 8px 0; text-transform: uppercase;">Organiser</p>
+                                    <p style="font-size: 15px; font-weight: 600; margin: 0;">Maria Garcia</p>
+                                </div>
+                                <div>
+                                    <p style="font-size: 12px; opacity: 0.8; font-weight: 600; margin: 0 0 8px 0; text-transform: uppercase;">Host</p>
+                                    <p style="font-size: 15px; font-weight: 600; margin: 0;">David Thompson</p>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="btn-secondary" style="flex: 1; background: rgba(255,255,255,0.15); border: none; color: white;"><iconify-icon icon="mdi:trash-can-outline" style="font-size: 14px;"></iconify-icon></button>
+                            </div>
+                        </div>
+
+                        <div class="card-dark p-6 rounded-2xl" style="background: linear-gradient(135deg, #F59E0B 0%, #D97706 60%, #B45309 100%); display: grid; grid-template-columns: 1fr; gap: 16px;">
+                            <div>
+                                <p style="font-size: 12px; opacity: 0.8; font-weight: 600; margin: 0 0 8px 0; text-transform: uppercase;">Event Name</p>
+                                <h3 style="font-size: 18px; font-weight: 700; margin: 0;">Choir Practice</h3>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 120px 150px 150px; gap: 16px;">
+                                <div>
+                                    <p style="font-size: 12px; opacity: 0.8; font-weight: 600; margin: 0 0 8px 0; text-transform: uppercase;">Time</p>
+                                    <p style="font-size: 15px; font-weight: 600; margin: 0;">5:30 PM</p>
+                                </div>
+                                <div>
+                                    <p style="font-size: 12px; opacity: 0.8; font-weight: 600; margin: 0 0 8px 0; text-transform: uppercase;">Organiser</p>
+                                    <p style="font-size: 15px; font-weight: 600; margin: 0;">Rachel Smith</p>
+                                </div>
+                                <div>
+                                    <p style="font-size: 12px; opacity: 0.8; font-weight: 600; margin: 0 0 8px 0; text-transform: uppercase;">Host</p>
+                                    <p style="font-size: 15px; font-weight: 600; margin: 0;">Grace Lee</p>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="btn-secondary" style="flex: 1; background: rgba(255,255,255,0.15); border: none; color: white;"><iconify-icon icon="mdi:trash-can-outline" style="font-size: 14px;"></iconify-icon></button>
+                            </div>
+                        </div>
+
+                        <div class="card-dark p-6 rounded-2xl" style="background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 60%, #6D28D9 100%); display: grid; grid-template-columns: 1fr; gap: 16px;">
+                            <div>
+                                <p style="font-size: 12px; opacity: 0.8; font-weight: 600; margin: 0 0 8px 0; text-transform: uppercase;">Event Name</p>
+                                <h3 style="font-size: 18px; font-weight: 700; margin: 0;">Youth Fellowship</h3>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 120px 150px 150px; gap: 16px;">
+                                <div>
+                                    <p style="font-size: 12px; opacity: 0.8; font-weight: 600; margin: 0 0 8px 0; text-transform: uppercase;">Time</p>
+                                    <p style="font-size: 15px; font-weight: 600; margin: 0;">4:00 PM</p>
+                                </div>
+                                <div>
+                                    <p style="font-size: 12px; opacity: 0.8; font-weight: 600; margin: 0 0 8px 0; text-transform: uppercase;">Organiser</p>
+                                    <p style="font-size: 15px; font-weight: 600; margin: 0;">David Lee</p>
+                                </div>
+                                <div>
+                                    <p style="font-size: 12px; opacity: 0.8; font-weight: 600; margin: 0 0 8px 0; text-transform: uppercase;">Host</p>
+                                    <p style="font-size: 15px; font-weight: 600; margin: 0;">Lisa Wong</p>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="btn-secondary" style="flex: 1; background: rgba(255,255,255,0.15); border: none; color: white;"><iconify-icon icon="mdi:trash-can-outline" style="font-size: 14px;"></iconify-icon></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Add Member Modal -->
+    <div id="addPersonModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" style="backdrop-filter: blur(4px);">
+        <div class="card w-full max-w-md p-6">
+            <h3 style="font-size: 20px; font-weight: 700; color: var(--gray-800); margin-bottom: 20px;">Add New Member</h3>
+            <div class="space-y-4 mb-6">
+                <input type="text" placeholder="Full Name" style="width: 100%; padding: 10px 16px; border: 1px solid var(--gray-200); border-radius: 10px; font-size: 15px;">
+                <input type="email" placeholder="Email Address" style="width: 100%; padding: 10px 16px; border: 1px solid var(--gray-200); border-radius: 10px; font-size: 15px;">
+                <input type="tel" placeholder="Phone Number" style="width: 100%; padding: 10px 16px; border: 1px solid var(--gray-200); border-radius: 10px; font-size: 15px;">
+                <select style="width: 100%; padding: 10px 16px; border: 1px solid var(--gray-200); border-radius: 10px; font-size: 15px;">
+                    <option>Select Role</option>
+                    <option>Member</option>
+                    <option>Leader</option>
+                    <option>Volunteer</option>
+                </select>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="closeAddPersonModal()" class="btn-secondary flex-1">Cancel</button>
+                <button class="btn-primary flex-1">Add Member</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Event Modal -->
+    <div id="addEventModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" style="backdrop-filter: blur(4px);">
+        <div class="card w-full max-w-md p-6" style="max-height: 90vh; overflow-y-auto;">
+            <h3 style="font-size: 20px; font-weight: 700; color: var(--gray-800); margin-bottom: 20px;">Create New Event</h3>
+            <div class="space-y-4 mb-6">
+                <div>
+                    <label style="display: block; font-size: 13px; font-weight: 600; color: var(--gray-700); margin-bottom: 6px;">Event Name</label>
+                    <input type="text" id="eventName" placeholder="e.g., Sunday Service" style="width: 100%; padding: 10px 16px; border: 1px solid var(--gray-200); border-radius: 10px; font-size: 15px; box-sizing: border-box;">
+                </div>
+                <div>
+                    <label style="display: block; font-size: 13px; font-weight: 600; color: var(--gray-700); margin-bottom: 6px;">Date</label>
+                    <input type="date" id="eventDate" style="width: 100%; padding: 10px 16px; border: 1px solid var(--gray-200); border-radius: 10px; font-size: 15px; box-sizing: border-box;">
+                </div>
+                <div>
+                    <label style="display: block; font-size: 13px; font-weight: 600; color: var(--gray-700); margin-bottom: 6px;">Time</label>
+                    <input type="time" id="eventTime" style="width: 100%; padding: 10px 16px; border: 1px solid var(--gray-200); border-radius: 10px; font-size: 15px; box-sizing: border-box;">
+                </div>
+                <div>
+                    <label style="display: block; font-size: 13px; font-weight: 600; color: var(--gray-700); margin-bottom: 6px;">Organiser Name</label>
+                    <input type="text" id="eventOrganiser" placeholder="e.g., Priyanka" style="width: 100%; padding: 10px 16px; border: 1px solid var(--gray-200); border-radius: 10px; font-size: 15px; box-sizing: border-box;">
+                </div>
+                <div>
+                    <label style="display: block; font-size: 13px; font-weight: 600; color: var(--gray-700); margin-bottom: 6px;">Host Name</label>
+                    <input type="text" id="eventHost" placeholder="e.g., Padma" style="width: 100%; padding: 10px 16px; border: 1px solid var(--gray-200); border-radius: 10px; font-size: 15px; box-sizing: border-box;">
+                </div>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="closeAddEventModal()" class="btn-secondary flex-1">Cancel</button>
+                <button onclick="saveEvent()" class="btn-primary flex-1">Create Event</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const EVENTS_STORAGE_KEY = 'epcEvents';
+        const SIDEBAR_STATE_KEY = 'sidebarExpanded';
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const toggleBtn = document.getElementById('toggleBtn');
+            const isExpanded = sidebar.classList.contains('expanded');
+
+            if (isExpanded) {
+                sidebar.classList.remove('expanded');
+                toggleBtn.innerHTML = '<iconify-icon icon="mdi:chevron-right" style="font-size: 22px;"></iconify-icon>';
+                localStorage.setItem(SIDEBAR_STATE_KEY, 'false');
+            } else {
+                sidebar.classList.add('expanded');
+                toggleBtn.innerHTML = '<iconify-icon icon="mdi:chevron-left" style="font-size: 22px;"></iconify-icon>';
+                localStorage.setItem(SIDEBAR_STATE_KEY, 'true');
+            }
+        }
+
+        function initSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const toggleBtn = document.getElementById('toggleBtn');
+            const isExpanded = localStorage.getItem(SIDEBAR_STATE_KEY) === 'true';
+
+            if (isExpanded) {
+                sidebar.classList.add('expanded');
+                toggleBtn.innerHTML = '<iconify-icon icon="mdi:chevron-left" style="font-size: 22px;"></iconify-icon>';
+            }
+            toggleBtn.style.display = 'flex';
+            toggleBtn.style.alignItems = 'center';
+            toggleBtn.style.justifyContent = 'center';
+        }
+
+        function getEvents() {
+            const stored = localStorage.getItem(EVENTS_STORAGE_KEY);
+            return stored ? JSON.parse(stored) : [];
+        }
+
+        function saveEvent() {
+            const name = document.getElementById('eventName').value.trim();
+            const date = document.getElementById('eventDate').value;
+            const time = document.getElementById('eventTime').value;
+            const organiser = document.getElementById('eventOrganiser').value.trim();
+            const host = document.getElementById('eventHost').value.trim();
+
+            if (!name || !date || !time || !organiser || !host) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            const event = {
+                id: Date.now(),
+                name,
+                date,
+                time,
+                organiser,
+                host
+            };
+
+            const events = getEvents();
+            events.push(event);
+            localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify(events));
+
+            document.getElementById('eventName').value = '';
+            document.getElementById('eventDate').value = '';
+            document.getElementById('eventTime').value = '';
+            document.getElementById('eventOrganiser').value = '';
+            document.getElementById('eventHost').value = '';
+
+            closeAddEventModal();
+            renderEvents();
+        }
+
+        function renderEvents() {
+            const events = getEvents();
+            const eventsContainer = document.getElementById('eventsGrid');
+            if (!eventsContainer) return;
+
+            eventsContainer.innerHTML = events.map((event, idx) => {
+                const gradients = [
+                    'linear-gradient(135deg, #D8BFD8 0%, #E6D7E6 60%, #F0E8F5 100%)',
+                    'linear-gradient(135deg, #E8D4E8 0%, #F0D4E6 60%, #F5D9F0 100%)',
+                    'linear-gradient(135deg, #D8EBE8 0%, #D4E8DC 60%, #D9F0ED 100%)',
+                    'linear-gradient(135deg, #F5E6D3 0%, #FFF8DC 60%, #FFFACD 100%)',
+                    'linear-gradient(135deg, #C084FC 0%, #D8A5FF 60%, #E9B8FF 100%)',
+                    'linear-gradient(135deg, #F0C4E8 0%, #F8A4D0 60%, #F472B6 100%)'
+                ];
+                const gradient = gradients[idx % gradients.length];
+
+                return `
+                    <div class="card-dark p-6 rounded-2xl" style="background: ${gradient}; display: grid; grid-template-columns: 1fr; gap: 16px;">
+                        <div>
+                            <p style="font-size: 12px; opacity: 0.8; font-weight: 600; margin: 0 0 8px 0; text-transform: uppercase;">Event Name</p>
+                            <h3 style="font-size: 18px; font-weight: 700; margin: 0;">${event.name}</h3>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 120px 150px 150px; gap: 16px;">
+                            <div>
+                                <p style="font-size: 12px; opacity: 0.8; font-weight: 600; margin: 0 0 8px 0; text-transform: uppercase;">Time</p>
+                                <p style="font-size: 15px; font-weight: 600; margin: 0;">${event.time}</p>
+                            </div>
+                            <div>
+                                <p style="font-size: 12px; opacity: 0.8; font-weight: 600; margin: 0 0 8px 0; text-transform: uppercase;">Organiser</p>
+                                <p style="font-size: 15px; font-weight: 600; margin: 0;">${event.organiser}</p>
+                            </div>
+                            <div>
+                                <p style="font-size: 12px; opacity: 0.8; font-weight: 600; margin: 0 0 8px 0; text-transform: uppercase;">Host</p>
+                                <p style="font-size: 15px; font-weight: 600; margin: 0;">${event.host}</p>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 8px; margin-top: 8px;">
+                            <button onclick="deleteEvent(${event.id})" class="btn-secondary" style="flex: 1; background: rgba(255,255,255,0.15); border: none; color: white;"><iconify-icon icon="mdi:trash-can-outline" style="font-size: 14px;"></iconify-icon></button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function deleteEvent(eventId) {
+            if (!confirm('Delete this event?')) return;
+            let events = getEvents();
+            events = events.filter(e => e.id !== eventId);
+            localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify(events));
+            renderEvents();
+        }
+
+        function showSection(id) {
+            document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
+            document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`[title="${id === 'dashboard' ? 'Dashboard' : id === 'people' ? 'Members' : 'Events'}"]`).classList.add('active');
+
+            if (id === 'events') {
+                renderEvents();
+            }
+        }
+
+        function showAddPersonModal() { document.getElementById('addPersonModal').classList.remove('hidden'); }
+        function closeAddPersonModal() { document.getElementById('addPersonModal').classList.add('hidden'); }
+        function showAddEventModal() { document.getElementById('addEventModal').classList.remove('hidden'); }
+        function closeAddEventModal() { document.getElementById('addEventModal').classList.add('hidden'); }
+
+        window.addEventListener('click', (e) => {
+            if (e.target.id === 'addPersonModal') closeAddPersonModal();
+            if (e.target.id === 'addEventModal') closeAddEventModal();
+        });
+
+        // Initial load
+        document.addEventListener('DOMContentLoaded', () => {
+            initSidebar();
+            renderEvents();
+        });
+    </script>
+</body>
+</html>
