@@ -805,6 +805,13 @@
         const SIDEBAR_STATE_KEY = 'sidebarExpanded';
         let mobileMenuOpen = false;
 
+        const DEFAULT_EVENTS = [
+            { id: 1, name: 'Sunday Service', date: '2026-05-04', time: '10:00 AM', organiser: 'Priyanka', host: 'Padma' },
+            { id: 2, name: 'Bible Study', date: '2026-05-02', time: '2:00 PM', organiser: 'John Doe', host: 'Michael Johnson' },
+            { id: 3, name: 'Prayer Meeting', date: '2026-05-03', time: '6:30 PM', organiser: 'Sarah Anderson', host: 'Emma Wilson' },
+            { id: 4, name: 'Choir Practice', date: '2026-05-05', time: '5:00 PM', organiser: 'Rachel Smith', host: 'Grace Lee' }
+        ];
+
         function toggleMobileMenu() {
             const sidebar = document.getElementById('sidebar');
             mobileMenuOpen = !mobileMenuOpen;
@@ -1039,6 +1046,10 @@
 
         // Initial load
         document.addEventListener('DOMContentLoaded', () => {
+            // Load default events if empty
+            if (!localStorage.getItem(EVENTS_STORAGE_KEY)) {
+                localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify(DEFAULT_EVENTS));
+            }
             initSidebar();
             renderDashboardEvents();
             renderEvents();
