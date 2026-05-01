@@ -106,6 +106,63 @@
             padding: 24px 16px;
         }
 
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+                padding: 12px 0;
+                gap: 4px;
+            }
+
+            .sidebar.expanded {
+                width: 70px;
+                padding: 12px 0;
+            }
+
+            .nav-label {
+                display: none !important;
+            }
+
+            .sidebar-logo {
+                width: 40px !important;
+                height: 40px !important;
+            }
+
+            .sidebar-logo span {
+                font-size: 14px !important;
+            }
+
+            .nav-item {
+                width: 40px !important;
+                height: 40px !important;
+            }
+
+            #toggleBtn {
+                display: none !important;
+            }
+
+            /* Event cards mobile layout */
+            .event-grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            .event-card-mobile {
+                padding: 12px !important;
+                gap: 8px !important;
+            }
+
+            .event-card-mobile > div:nth-child(2),
+            .event-card-mobile > div:nth-child(3),
+            .event-card-mobile > div:nth-child(4) {
+                display: inline-block;
+                width: 48%;
+                margin-right: 2%;
+            }
+
+            .event-card-mobile > div:nth-child(3) {
+                margin-right: 0;
+            }
+        }
+
         .sidebar-logo {
             width: 48px;
             height: 48px;
@@ -338,7 +395,7 @@
     </style>
 </head>
 <body>
-    <div class="flex h-screen bg-blue-50">
+    <div class="flex h-screen bg-blue-50 flex-col md:flex-row">
         <!-- Sidebar Navigation -->
         <div class="sidebar" id="sidebar">
             <button onclick="showSection('dashboard')" class="sidebar-logo" style="border: none; cursor: pointer;">
@@ -366,15 +423,16 @@
         <!-- Main Content -->
         <div class="flex-1 overflow-hidden">
             <!-- Dashboard Section -->
-            <section id="dashboard" class="section h-full flex flex-col">
-                <div class="p-5 md:p-6 space-y-4 flex-1 flex flex-col overflow-hidden">
+            <section id="dashboard" class="section h-full flex flex-col w-full">
+                <div class="p-3 md:p-6 space-y-3 md:space-y-4 flex-1 flex flex-col overflow-hidden">
                     <!-- Greeting -->
-                    <div class="card-dark p-10 rounded-2xl flex-shrink-0" style="position: relative; overflow: hidden;">
+                    <div class="card-dark p-5 md:p-10 rounded-2xl flex-shrink-0" style="position: relative; overflow: hidden;">
                         <div>
-                            <h1 style="font-size: 27px; font-weight: 700; margin-bottom: 4px;">Praise the LORD!</h1>
-                            <p style="font-size: 24px; font-weight: 400; opacity: 0.9; margin: 0;">Welcome to Esther Prayer Cell</p>
+                            <h1 style="font-size: 20px; margin-bottom: 4px;" class="md:text-3xl font-bold md:font-bold">Praise the LORD!</h1>
+                            <p style="font-size: 16px; font-weight: 400; opacity: 0.9; margin: 0;" class="md:text-2xl">Welcome to Esther Prayer Cell</p>
                         </div>
-                        <img src="women.PNG" alt="Women Prayer Cell" style="top: 3px; position: absolute; right: 46px; height: 367px; width: auto;">
+                        <img src="women.PNG" alt="Women Prayer Cell" style="top: 3px; position: absolute; right: 10px; height: 150px; width: auto;" class="md:hidden">
+                        <img src="women.PNG" alt="Women Prayer Cell" style="top: 3px; position: absolute; right: 46px; height: 367px; width: auto;" class="hidden md:block">
                     </div>
 
                     <!-- KPI Stats -->
@@ -411,13 +469,14 @@
                     </div>
 
                     <!-- Content Grid -->
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 flex-1 min-h-0">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 flex-1 min-h-0">
                         <!-- Today Events -->
-                        <div class="card p-5 lg:col-span-2 overflow-hidden flex flex-col">
+                        <div class="card p-4 md:p-5 col-span-1 md:col-span-2 lg:col-span-2 overflow-hidden flex flex-col">
                             <h3 style="font-size: 16px; font-weight: 700; color: var(--gray-800); margin-bottom: 14px;">Today Events</h3>
                             <div class="space-y-3 flex-1 overflow-y-auto">
                                 <!-- Event 1 -->
-                                <div style="background: #FAF5FF; border-radius: 12px; padding: 16px; display: grid; grid-template-columns: 1fr 100px 150px 150px; gap: 16px; align-items: center;">
+                                <div style="background: #FAF5FF; border-radius: 12px; padding: 12px; display: grid; grid-template-columns: 1fr; gap: 12px; align-items: stretch;" class="md:grid-cols-4 md:gap-4 md:p-4 md:grid">
+                                <div style="display: none;" class="md:block">
                                     <div>
                                         <p style="font-size: 11px; color: var(--gray-500); font-weight: 600; margin: 0 0 6px 0; text-transform: uppercase;">Event</p>
                                         <p style="font-size: 14px; font-weight: 600; color: var(--gray-800); margin: 0;">Sunday Service</p>
