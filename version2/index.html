@@ -417,21 +417,21 @@
             }
 
             container.innerHTML = events.map((e, i) => `
-                <div style="background: ${bgs[i % 6]}; border-radius: 12px; padding: 12px 16px; display: grid; grid-template-columns: 1fr; gap: 12px;" class="md:grid-cols-4 md:gap-4 md:p-4">
+                <div style="background: ${bgs[i % 6]}; border-radius: 12px; padding: 12px 16px; display: grid; grid-template-columns: 1fr 100px 150px 150px; gap: 16px; align-items: center;">
                     <div>
-                        <p style="font-size: 11px; color: #64748B; font-weight: 600; margin: 0 0 4px 0; text-transform: uppercase;">Event</p>
+                        <p style="font-size: 11px; color: #64748B; font-weight: 600; margin: 0 0 6px 0; text-transform: uppercase;">Event</p>
                         <p style="font-size: 14px; font-weight: 600; color: #1E293B; margin: 0;">${e.name}</p>
                     </div>
                     <div>
-                        <p style="font-size: 11px; color: #64748B; font-weight: 600; margin: 0 0 4px 0; text-transform: uppercase;">Time</p>
+                        <p style="font-size: 11px; color: #64748B; font-weight: 600; margin: 0 0 6px 0; text-transform: uppercase;">Time</p>
                         <p style="font-size: 14px; font-weight: 600; color: #1E293B; margin: 0;">${e.time}</p>
                     </div>
                     <div>
-                        <p style="font-size: 11px; color: #64748B; font-weight: 600; margin: 0 0 4px 0; text-transform: uppercase;">Organiser</p>
+                        <p style="font-size: 11px; color: #64748B; font-weight: 600; margin: 0 0 6px 0; text-transform: uppercase;">Organiser</p>
                         <p style="font-size: 14px; font-weight: 600; color: #1E293B; margin: 0;">${e.organiser}</p>
                     </div>
                     <div>
-                        <p style="font-size: 11px; color: #64748B; font-weight: 600; margin: 0 0 4px 0; text-transform: uppercase;">Host</p>
+                        <p style="font-size: 11px; color: #64748B; font-weight: 600; margin: 0 0 6px 0; text-transform: uppercase;">Host</p>
                         <p style="font-size: 14px; font-weight: 600; color: #1E293B; margin: 0;">${e.host}</p>
                     </div>
                 </div>
