@@ -264,6 +264,17 @@
             flex-shrink: 0;
         }
 
+        @media (max-width: 640px) {
+            .icon-box {
+                width: 32px;
+                height: 32px;
+            }
+
+            .icon-box iconify-icon {
+                font-size: 16px !important;
+            }
+        }
+
         .icon-box-light {
             width: 44px;
             height: 44px;
@@ -336,6 +347,15 @@
             display: flex;
             align-items: center;
             gap: 16px;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        @media (max-width: 640px) {
+            .kpi-card {
+                padding: 12px 8px;
+                gap: 8px;
+            }
         }
 
         .kpi-card:hover {
@@ -355,6 +375,16 @@
             font-size: 13px;
             color: var(--gray-500);
             margin-top: 4px;
+        }
+
+        @media (max-width: 640px) {
+            .kpi-value {
+                font-size: 18px;
+            }
+
+            .kpi-label {
+                font-size: 11px;
+            }
         }
 
         .list-item {
@@ -455,7 +485,7 @@
                     </div>
 
                     <!-- KPI Stats -->
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 flex-shrink-0">
+                    <div class="grid grid-cols-3 gap-2 md:gap-4 flex-shrink-0">
                         <div class="kpi-card">
                             <div class="icon-box">
                                 <iconify-icon icon="mdi:account-group" style="font-size: 20px;"></iconify-icon>
@@ -488,9 +518,9 @@
                     </div>
 
                     <!-- Content Grid -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 flex-1 min-h-0">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 flex-1 min-h-0" style="grid-auto-rows: minmax(300px, 1fr);">
                         <!-- Today Events -->
-                        <div class="card p-4 md:p-5 col-span-1 md:col-span-2 lg:col-span-2 overflow-hidden flex flex-col">
+                        <div class="card p-4 md:p-5 col-span-1 md:col-span-2 lg:col-span-2 overflow-hidden flex flex-col" style="min-height: 350px;">
                             <h3 style="font-size: 16px; font-weight: 700; color: var(--gray-800); margin-bottom: 14px;">Today Events</h3>
                             <div id="dashboardEventsContainer" class="space-y-3 flex-1 overflow-y-auto">
                                 <!-- Events will be rendered here -->
