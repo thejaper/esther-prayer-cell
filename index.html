@@ -110,7 +110,14 @@
             overflow-y: hidden;
         }
 
+        .dailybread-card {
+            min-height: auto;
+        }
+
         @media (max-width: 768px) {
+            .dailybread-card {
+                min-height: 400px !important;
+            }
             .dashboard-content {
                 overflow-y: auto;
             }
@@ -528,7 +535,7 @@
                     <!-- Content Grid -->
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 flex-1 min-h-0">
                         <!-- Today Events -->
-                        <div class="card p-4 md:p-5 col-span-1 md:col-span-2 lg:col-span-2 overflow-hidden flex flex-col" style="min-height: 300px;">
+                        <div class="card p-4 md:p-5 col-span-1 md:col-span-2 lg:col-span-2 overflow-hidden flex flex-col">
                             <h3 style="font-size: 16px; font-weight: 700; color: var(--gray-800); margin-bottom: 14px;">Today Events</h3>
                             <div id="dashboardEventsContainer" class="space-y-3 flex-1 overflow-y-auto">
                                 <!-- Events will be rendered here -->
@@ -536,7 +543,7 @@
                         </div>
 
                         <!-- Daily Bread - Bible in One Year -->
-                        <div class="card p-5 overflow-hidden flex flex-col" style="min-height: 300px;">
+                        <div class="card p-5 overflow-hidden flex flex-col dailybread-card">
                             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-shrink: 0;">
                                 <h3 style="font-size: 16px; font-weight: 700; color: var(--gray-800); margin: 0;">Daily Bread</h3>
                                 <p style="font-size: 13px; color: var(--gray-500); margin: 0;">May 1, 2026</p>
