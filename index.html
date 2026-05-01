@@ -107,15 +107,23 @@
         }
 
         @media (max-width: 768px) {
+            * {
+                box-sizing: border-box;
+            }
+
+            body {
+                overflow-x: hidden;
+            }
+
             .sidebar {
-                width: 70px;
-                padding: 12px 0;
-                gap: 4px;
+                width: 80px;
+                padding: 24px 0;
+                border-radius: 0;
             }
 
             .sidebar.expanded {
-                width: 70px;
-                padding: 12px 0;
+                width: 80px;
+                padding: 24px 0;
             }
 
             .nav-label {
@@ -123,21 +131,27 @@
             }
 
             .sidebar-logo {
-                width: 40px !important;
-                height: 40px !important;
+                width: 48px !important;
+                height: 48px !important;
+                margin-bottom: 24px;
             }
 
             .sidebar-logo span {
-                font-size: 14px !important;
+                font-size: 16px !important;
             }
 
             .nav-item {
-                width: 40px !important;
-                height: 40px !important;
+                width: 48px !important;
+                height: 48px !important;
             }
 
             #toggleBtn {
                 display: none !important;
+            }
+
+            .section {
+                width: 100vw !important;
+                overflow-x: hidden !important;
             }
 
             /* Event cards mobile layout */
@@ -395,9 +409,14 @@
     </style>
 </head>
 <body>
-    <div class="flex h-screen bg-blue-50 flex-col md:flex-row">
+    <div class="flex h-screen bg-blue-50 relative">
+        <!-- Mobile Menu Toggle -->
+        <button id="mobileMenuBtn" onclick="toggleMobileMenu()" style="display: none; position: fixed; top: 16px; left: 16px; z-index: 40; background: var(--primary-600); color: white; border: none; width: 44px; height: 44px; border-radius: 10px; cursor: pointer; align-items: center; justify-content: center;" class="md:hidden">
+            <iconify-icon icon="mdi:menu" style="font-size: 24px;"></iconify-icon>
+        </button>
+
         <!-- Sidebar Navigation -->
-        <div class="sidebar" id="sidebar">
+        <div class="sidebar" id="sidebar" style="position: fixed; left: 0; top: 0; height: 100vh; z-index: 30; transform: translateX(-100%); transition: transform 0.3s ease;" class="md:static md:transform-none md:h-auto">
             <button onclick="showSection('dashboard')" class="sidebar-logo" style="border: none; cursor: pointer;">
                 <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 18px; font-weight: 700; color: white;">EPC</span>
             </button>
@@ -421,10 +440,10 @@
         </div>
 
         <!-- Main Content -->
-        <div class="flex-1 overflow-hidden">
+        <div class="flex-1 overflow-hidden w-full md:w-auto pt-14 md:pt-0">
             <!-- Dashboard Section -->
-            <section id="dashboard" class="section h-full flex flex-col w-full">
-                <div class="p-3 md:p-6 space-y-3 md:space-y-4 flex-1 flex flex-col overflow-hidden">
+            <section id="dashboard" class="section h-full flex flex-col w-full overflow-x-hidden">
+                <div class="p-4 md:p-6 space-y-3 md:space-y-4 flex-1 flex flex-col overflow-y-auto">
                     <!-- Greeting -->
                     <div class="card-dark p-5 md:p-10 rounded-2xl flex-shrink-0" style="position: relative; overflow: hidden;">
                         <div>
@@ -863,6 +882,23 @@
     <script>
         const EVENTS_STORAGE_KEY = 'epcEvents';
         const SIDEBAR_STATE_KEY = 'sidebarExpanded';
+        let mobileMenuOpen = false;
+
+        function toggleMobileMenu() {
+            const sidebar = document.getElementById('sidebar');
+            mobileMenuOpen = !mobileMenuOpen;
+            if (mobileMenuOpen) {
+                sidebar.style.transform = 'translateX(0)';
+            } else {
+                sidebar.style.transform = 'translateX(-100%)';
+            }
+        }
+
+        function closeMobileMenu() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.style.transform = 'translateX(-100%)';
+            mobileMenuOpen = false;
+        }
 
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
@@ -883,15 +919,40 @@
         function initSidebar() {
             const sidebar = document.getElementById('sidebar');
             const toggleBtn = document.getElementById('toggleBtn');
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
             const isExpanded = localStorage.getItem(SIDEBAR_STATE_KEY) === 'true';
 
             if (isExpanded) {
                 sidebar.classList.add('expanded');
                 toggleBtn.innerHTML = '<iconify-icon icon="mdi:chevron-left" style="font-size: 22px;"></iconify-icon>';
             }
-            toggleBtn.style.display = 'flex';
-            toggleBtn.style.alignItems = 'center';
-            toggleBtn.style.justifyContent = 'center';
+
+            // Show/hide elements based on screen size
+            function updateLayout() {
+                const isMobile = window.innerWidth < 768;
+                if (isMobile) {
+                    sidebar.style.position = 'fixed';
+                    sidebar.style.left = '0';
+                    sidebar.style.top = '0';
+                    sidebar.style.height = '100vh';
+                    sidebar.style.zIndex = '30';
+                    sidebar.style.transform = 'translateX(-100%)';
+                    toggleBtn.style.display = 'none';
+                    mobileMenuBtn.style.display = 'flex';
+                } else {
+                    sidebar.style.position = 'relative';
+                    sidebar.style.height = 'auto';
+                    sidebar.style.transform = 'none';
+                    toggleBtn.style.display = 'flex';
+                    mobileMenuBtn.style.display = 'none';
+                    toggleBtn.style.alignItems = 'center';
+                    toggleBtn.style.justifyContent = 'center';
+                    mobileMenuOpen = false;
+                }
+            }
+
+            updateLayout();
+            window.addEventListener('resize', updateLayout);
         }
 
         function getEvents() {
@@ -995,6 +1056,8 @@
             if (id === 'events') {
                 renderEvents();
             }
+
+            closeMobileMenu();
         }
 
         function showAddPersonModal() { document.getElementById('addPersonModal').classList.remove('hidden'); }
